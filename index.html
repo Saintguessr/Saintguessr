@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saintguessr</title>
-    <!-- Ładowanie ikony gry (logo w zakładce) -->
     <link rel="icon" type="image/jpeg" href="logo.jpg">
-    <!-- Ładowanie darmowych map Leaflet (Styl i skrypty) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body {
@@ -192,7 +190,6 @@
 </head>
 <body>
 
-    <!-- Link do ikony z Twojego GitHuba umieszczony nad napisem głównym -->
     <img class="game-logo-top" src="https://raw.githubusercontent.com/Saintguessr/Saintguessr/b6f4a836981e2285c78eb04cb34a8b1f48f7b83a/logo.jpg" alt="Saintguessr Logo">
 
     <h1>Saintguessr</h1>
@@ -204,7 +201,6 @@
     </div>
 
     <div id="main-box" class="game-container">
-        <!-- Sekcja z Obrazem -->
         <div class="image-section">
             <div class="section-title">Kim jest ta postać?</div>
             <div class="image-box">
@@ -212,13 +208,11 @@
             </div>
         </div>
 
-        <!-- Sekcja z Mapą -->
         <div class="map-section">
             <div class="section-title">Zaznacz miejsce urodzenia:</div>
             <div id="map"></div>
         </div>
 
-        <!-- Sekcja z Osią Czasu -->
         <div class="timeline-section">
             <div class="section-title" style="color: #ffe259; text-shadow: none;">Wybierz rok urodzenia (Oś czasu):</div>
             <input type="range" min="-50" max="2010" value="1000" class="slider" id="year-slider" oninput="updateYearLabel(this.value)">
@@ -232,6 +226,9 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const allSaints = [
+            // =========================================================================
+            // ORYGINALNA BAZA (zdjecia i zdjecia 2 z Twojego szablonu)
+            // =========================================================================
             { "name": "Święta Małgorzata Maria Alacoque", "birth_year": 1647, "lat": 46.4356, "lng": 4.4172, "img_url": "zdjecia/St_Margaret_Mary_Alacoque_Contemplating_the_Sacred_Heart_of_Jesus.png" },
             { "name": "Święty Dominik Guzmán", "birth_year": 1170, "lat": 41.8252, "lng": -3.4889, "img_url": "zdjecia/Santo_Domingo_de_Guzmán,_Museo_de_Bellas_Artes_de_Córdoba.jpg" },
             { "name": "Święty Carlo Acutis", "birth_year": 1991, "lat": 51.5074, "lng": -0.1278, "img_url": "zdjecia/carlo.jpg" },
@@ -263,7 +260,106 @@
             { "name": "Święty Benedykt z Nursji", "birth_year": 480, "lat": 42.7931, "lng": 13.0933, "img_url": "zdjecia 2/benedict%20z%20nursji.jpg" },
             { "name": "Święty Sebastian", "birth_year": 256, "lat": 43.7102, "lng": 7.2620, "img_url": "zdjecia 2/sebastian.jpg" },
             { "name": "Święty Jan Maria Vianney", "birth_year": 1786, "lat": 45.8569, "lng": 4.8314, "img_url": "zdjecia 2/vianney.jpg" },
-            { "name": "Święta Teresa z Ávila", "birth_year": 1515, "lat": 40.6565, "lng": -4.7001, "img_url": "zdjecia 2/%C5%9Bw%20Teresa%20z%20Avila.jpg" }
+            { "name": "Święta Teresa z Ávila", "birth_year": 1515, "lat": 40.6565, "lng": -4.7001, "img_url": "zdjecia 2/%C5%9Bw%20Teresa%20z%20Avila.jpg" },
+
+            // =========================================================================
+            // ZDJĘCIA 3 (Nowo dodana lista z Twoich linków GitHub)
+            // =========================================================================
+            { 
+                "name": "Święta Róża z Limy", 
+                "birth_year": 1586, "lat": -12.0464, "lng": -77.0428, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/960px-Santa_Rosa_de_Lima_Ebrafol.jpg" 
+            },
+            { 
+                "name": "Święty Brat Albert (Adam Chmielowski)", 
+                "birth_year": 1845, "lat": 50.1192, "lng": 20.0383, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Adam_Chmielowski_(-1917).jpg" 
+            },
+            { 
+                "name": "Błogosławiony Honorat Koźmiński", 
+                "birth_year": 1829, "lat": 52.0333, "lng": 23.1167, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/B%C5%82._Honorat_Ko%C5%BAmi%C5%84ski_mal._Zbigniew_Koty%C5%82%C5%82o.jpg" 
+            },
+            { 
+                "name": "Święty Hieronim", 
+                "birth_year": 347, "lat": 45.2892, "lng": 13.7258, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Caravaggio_-_Saint_Jerome_in_his_study_-_Oratory_of_St_John_the_Baptist%2C_St_John%E2%80%99s_Co-Cathedral%2C_Valletta.jpg" 
+            },
+            { 
+                "name": "Święta Katarzyna ze Sieny", 
+                "birth_year": 1347, "lat": 43.3188, "lng": 11.3308, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Catherine_of_Siena.jpg" 
+            },
+            { 
+                "name": "Święty Paweł Pustelnik", 
+                "birth_year": 228, "lat": 26.1551, "lng": 32.7160, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Dolci_Saint_Paul_the_hermit.jpg" 
+            },
+            { 
+                "name": "Święty Grzegorz Wielki", 
+                "birth_year": 540, "lat": 41.9028, "lng": 12.4964, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Francisco_de_Goya_-_Saint_Gregory_the_Great%2C_Pope_-_Google_Art_Project.jpg" 
+            },
+            { 
+                "name": "Święty Jan XXIII", 
+                "birth_year": 1881, "lat": 45.7122, "lng": 9.5319, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Ioannes_XXIII%2C_by_De_Agostini%2C_1958%E2%80%931963.jpg" 
+            },
+            { 
+                "name": "Święty Jerzy", 
+                "birth_year": 275, "lat": 38.6311, "lng": 34.9083, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Kossak_Juliusz_Swiety_Jerzy.jpg" 
+            },
+            { 
+                "name": "Święty Paweł VI", 
+                "birth_year": 1897, "lat": 45.5416, "lng": 10.1872, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Paulus_VI%2C_by_Fotografia_Felici%2C_1969.jpg" 
+            },
+            { 
+                "name": "Święty Bonifacy", 
+                "birth_year": 672, "lat": 50.7936, "lng": -3.6811, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/SaintBoniface.jpg" 
+            },
+            { 
+                "name": "Święty Florian", 
+                "birth_year": 250, "lat": 48.3069, "lng": 14.2858, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Saint_Florian.jpg" 
+            },
+            { 
+                "name": "Święty Roch", 
+                "birth_year": 1295, "lat": 43.6108, "lng": 3.8767, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Saint_Roch_-_Giambattista_Tiepolo.jpg" 
+            },
+            { 
+                "name": "Święty Antoni Wielki", 
+                "birth_year": 251, "lat": 29.1122, "lng": 31.0256, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/St_Anthony_the_Great.jpg" 
+            },
+            { 
+                "name": "Święta Cecylia", 
+                "birth_year": 200, "lat": 41.9028, "lng": 12.4964, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/St_cecilia_guido_reni.jpg" 
+            },
+            { 
+                "name": "Święty Dominik Savio", 
+                "birth_year": 1842, "lat": 45.0933, "lng": 7.9739, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/S%C3%A3o_Domingos_S%C3%A1vio.jpg" 
+            },
+            { 
+                "name": "Święty Stanisław ze Szczepanowa", 
+                "birth_year": 1030, "lat": 49.9928, "lng": 20.6558, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/Wyspia%C5%84ski_-_%C5%9Awi%C4%99ty_Stanis%C5%82aw_Biskup_-_1895.jpg" 
+            },
+            { 
+                "name": "Święte Perpetua i Felicyta", 
+                "birth_year": 181, "lat": 36.8625, "lng": 10.3322, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/perpetua.jpg" 
+            },
+            { 
+                "name": "Święty Kazimierz Jagiellończyk", 
+                "birth_year": 1458, "lat": 52.2297, "lng": 21.0122, 
+                "img_url": "https://raw.githubusercontent.com/Saintguessr/Saintguessr/197c52f56b570addf7800a2c2bd0aa0450211bdc/zdj%C4%99cia%203/%C5%A0ventasis_Kazimieras%2C_1594.jpg" 
+            }
         ];
 
         let gameSaints = [];
