@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saintguessr</title>
+    <!-- Ładowanie ikony gry (logo) -->
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
     <!-- Ładowanie darmowych map Leaflet (Styl i skrypty) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
@@ -156,8 +158,9 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Baza danych ze ścieżkami względnymi
+        // Rozbudowana baza danych o przesłane postaci (łącznie 33 pozycje)
         const allSaints = [
+            // Poprzednie 10 postaci
             { "name": "Święta Małgorzata Maria Alacoque", "birth_year": 1647, "lat": 46.4356, "lng": 4.4172, "img_url": "zdjecia/St_Margaret_Mary_Alacoque_Contemplating_the_Sacred_Heart_of_Jesus.png" },
             { "name": "Święty Dominik Guzmán", "birth_year": 1170, "lat": 41.8252, "lng": -3.4889, "img_url": "zdjecia/Santo_Domingo_de_Guzmán,_Museo_de_Bellas_Artes_de_Córdoba.jpg" },
             { "name": "Święty Carlo Acutis", "birth_year": 1991, "lat": 51.5074, "lng": -0.1278, "img_url": "zdjecia/carlo.jpg" },
@@ -167,7 +170,31 @@
             { "name": "Święty Paweł z Tarsu", "birth_year": 5, "lat": 36.9164, "lng": 34.8951, "img_url": "zdjecia/Giovanni_Francesco_Barbieri_-_Saint_Paul.jpg" },
             { "name": "Święta Faustyna Kowalska", "birth_year": 1905, "lat": 52.2415, "lng": 18.9322, "img_url": "zdjecia/Maria_Faustyna_Kowalska.jpg" },
             { "name": "Święty Jan Ewangelista", "birth_year": 15, "lat": 32.8872, "lng": 35.6264, "img_url": "zdjecia/Szymon_Czechowicz_-_St_John_the_Evangelist_1754.jpg" },
-            { "name": "Święty Jan Chrzciciel", "birth_year": -6, "lat": 31.7683, "lng": 35.1642, "img_url": "zdjecia/jan chrzciciel.jpg" }
+            { "name": "Święty Jan Chrzciciel", "birth_year": -6, "lat": 31.7683, "lng": 35.1642, "img_url": "zdjecia/jan chrzciciel.jpg" },
+            
+            // NOWE POSTACIE (z folderu zdjecia 2)
+            { "name": "Święty Andrzej Bobola", "birth_year": 1591, "lat": 49.5911, "lng": 22.0461, "img_url": "zdjecia 2/Bobola.jpg" }, // Strachocina
+            { "name": "Święty Maksymilian Maria Kolbe", "birth_year": 1894, "lat": 51.6597, "lng": 19.3497, "img_url": "zdjecia 2/Fr.Maximilian_Kolbe_in_1936.jpg" }, // Zduńska Wola
+            { "name": "Święty Cyryl Aleksandryjski", "birth_year": 376, "lat": 30.9833, "lng": 31.1167, "img_url": "zdjecia 2/Icon_St._Cyril_of_Alexandria.jpg" }, // El-Mahalla el-Kubra, Egipt
+            { "name": "Święty Juan Diego", "birth_year": 1474, "lat": 19.6002, "lng": -99.1917, "img_url": "zdjecia 2/MIguel_Cabrera_-_Fiel_retrato_do_vener%C3%A1vel_Juan_Diego.jpg" }, // Cuautitlán, Meksyk
+            { "name": "Święta Matka Teresa z Kalkuty", "birth_year": 1910, "lat": 41.9964, "lng": 21.4306, "img_url": "zdjecia 2/MOTHER_TERESA_-_OIL_PAINTING_BY_RAJASEKHARAN.jpg" }, // Skopje, Macedonia
+            { "name": "Błogosławiony Jerzy Popiełuszko", "birth_year": 1947, "lat": 53.4869, "lng": 23.2750, "img_url": "zdjecia 2/Obraz_beatyfikacyjny_Jerzy_Popie%C5%82uszko_Malowa%C5%82_Zbigniew_Koty%C5%82%C5%82o.jpg" }, // Okopy
+            { "name": "Święty Ojciec Pio z Pietrelciny", "birth_year": 1887, "lat": 41.1856, "lng": 14.8472, "img_url": "zdjecia 2/Padre_Pio_portrait.jpg" }, // Pietrelcina, Włochy
+            { "name": "Błogosławiona Elżbieta Róża Czacka", "birth_year": 1876, "lat": 49.7989, "lng": 28.6125, "img_url": "zdjecia 2/R%C3%B3%C5%BCa_Czacka_1918.jpg" }, // Biała Cerkiew, Ukraina
+            { "name": "Święty Antoni Padewski", "birth_year": 1195, "lat": 38.7223, "lng": -9.1393, "img_url": "zdjecia 2/Saint_Anthony_of_Padua_with_the_Infant_Christ.jpg" }, // Lizbona, Portugalia
+            { "name": "Święty Ignacy Loyola", "birth_year": 1491, "lat": 43.1746, "lng": -2.2831, "img_url": "zdjecia 2/Saint_Ignatius_of_Loyola._Engraving._Wellcome_V0032199.jpg" }, // Loyola, Hiszpania
+            { "name": "Święty Patryk", "birth_year": 385, "lat": 54.3410, "lng": -4.5320, "img_url": "zdjecia 2/Saint_Patrick_Catholic_Church_(Junction_City%2C_Ohio)_-_stained_glass%2C_Saint_Patrick_-_detail.jpg" }, // Brytania (szacunkowo)
+            { "name": "Święty Jan Bosko", "birth_year": 1815, "lat": 45.0117, "lng": 7.9867, "img_url": "zdjecia 2/San_Giovanni_Bosco.jpg" }, // Castelnuovo Don Bosco, Włochy
+            { "name": "Święta Cecylia", "birth_year": 200, "lat": 41.9028, "lng": 12.4964, "img_url": "zdjecia 2/Stanis%C5%82aw_Kaczor-Batowski_-_%C5%9Aw._Cecylia.jpg" }, // Rzym, Włochy
+            { "name": "Błogosławiony Stefan Wyszyński", "birth_year": 1901, "lat": 52.8592, "lng": 21.8964, "img_url": "zdjecia 2/Stefan_Wyszy%C5%84ski.jpg" }, // Zuzela
+            { "name": "Święta Jadwiga Andegaweńska (Królowa)", "birth_year": 1373, "lat": 47.4979, "lng": 19.0402, "img_url": "zdjecia 2/Swieta_Jadwiga_w_Sandomierzu.JPG" }, // Buda (Budapeszt), Węgry
+            { "name": "Święty Augustyn z Hippony", "birth_year": 354, "lat": 36.2161, "lng": 7.9511, "img_url": "zdjecia 2/Szymon_Czechowicz_(z_warsztatem)_-_%C5%9Aw._Augustyn.jpg" }, // Thagaste, dzis Algieria
+            { "name": "Święta Teresa z Lisieux", "birth_year": 1873, "lat": 48.4322, "lng": 0.0913, "img_url": "zdjecia 2/Teresa-de-Lisieux.jpg" }, // Alençon, Francja
+            { "name": "Święty Tomasz z Akwinu", "birth_year": 1225, "lat": 41.4936, "lng": 13.7025, "img_url": "zdjecia 2/Thomas_Aquinas_by_Carlo_Crivelli.png" }, // Roccasecca, Włochy
+            { "name": "Święty Benedykt z Nursji", "birth_year": 480, "lat": 42.7931, "lng": 13.0933, "img_url": "zdjecia 2/benedict%20z%20nursji.jpg" }, // Nursja, Włochy
+            { "name": "Święty Sebastian", "birth_year": 256, "lat": 43.7102, "lng": 7.2620, "img_url": "zdjecia 2/sebastian.jpg" }, // Narbona, Francja
+            { "name": "Święty Jan Maria Vianney", "birth_year": 1786, "lat": 45.8569, "lng": 4.8314, "img_url": "zdjecia 2/vianney.jpg" }, // Dardilly, Francja
+            { "name": "Święta Teresa z Ávila", "birth_year": 1515, "lat": 40.6565, "lng": -4.7001, "img_url": "zdjecia 2/%C5%9Bw%20Teresa%20z%20Avila.jpg" } // Ávila, Hiszpania
         ];
 
         let gameSaints = [];
@@ -249,7 +276,7 @@
             const distanceDiff = getDistance(selectedLat, selectedLng, saint.lat, saint.lng);
             const yearDiff = Math.abs(userYear - saint.birth_year);
 
-            // NOWA PUNKTACJA: Max 5000 punktów za mapę i max 5000 punktów za czas
+            // Punkty: Max 5000 za mapę i max 5000 za czas
             let mapScore = 5000 - (distanceDiff * 0.5); 
             if (mapScore < 0) mapScore = 0;
 
@@ -299,7 +326,6 @@
 
         function showEndScreen() {
             let rating = "";
-            // Skala ocen dostosowana do nowego max limitu (50 000 pkt)
             if (totalScore >= 40000) rating = "🥇 Jesteś genialnym hagiografem i historykiem!";
             else if (totalScore >= 28000) rating = "🥈 Świetny wynik! Masz ogromną wiedzę.";
             else if (totalScore >= 14000) rating = "🥉 Dobra rozgrywka, ale niektóre stulecia lub kraje Ci się pomieszały.";
