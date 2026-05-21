@@ -110,7 +110,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #1a252f; /* Ciemne tło z logo, żeby obrazki ładnie kontrastowały */
+            background: #1a252f;
             border: 3px solid #ff416c;
             border-radius: 12px;
             padding: 10px;
@@ -148,7 +148,7 @@
             width: 90%;
             margin: 15px 0;
             cursor: pointer;
-            accent-color: #ff416c; /* Czerwony suwak w nowoczesnych przeglądarkach */
+            accent-color: #ff416c;
         }
 
         .btn {
@@ -345,10 +345,13 @@
             const distanceDiff = getDistance(selectedLat, selectedLng, saint.lat, saint.lng);
             const yearDiff = Math.abs(userYear - saint.birth_year);
 
-            let mapScore = 5000 - (distanceDiff * 0.5); 
+            // NOWY SUROWY SYSTEM PUNKTACJI
+            // Zerowanie przy 5000 km (1 km = minus 1 punkt z puli 5000)
+            let mapScore = 5000 - distanceDiff; 
             if (mapScore < 0) mapScore = 0;
 
-            let timeScore = 5000 - (yearDiff * 5.0); 
+            // Zerowanie przy 500 latach (1 rok = minus 10 punktów z puli 5000)
+            let timeScore = 5000 - (yearDiff * 10); 
             if (timeScore < 0) timeScore = 0;
 
             let roundScore = Math.round(mapScore + timeScore);
@@ -394,10 +397,10 @@
 
         function showEndScreen() {
             let rating = "";
-            if (totalScore >= 40000) rating = "🥇 Jesteś genialnym hagiografem i historykiem!";
-            else if (totalScore >= 28000) rating = "🥈 Świetny wynik! Masz ogromną wiedzę.";
-            else if (totalScore >= 14000) rating = "🥉 Dobra rozgrywka, ale niektóre stulecia lub kraje Ci się pomieszały.";
-            else rating = "👨‍🎓 Warto jeszcze poćwiczyć, świat i historia skrywają przed Tobą tajemnice.";
+            if (totalScore >= 35000) rating = "🥇 Jesteś genialnym hagiografem i historykiem! Surowe zasady Ci niestraszne.";
+            else if (totalScore >= 22000) rating = "🥈 Świetny wynik! Trudne warunki, ale masz solidną wiedzę.";
+            else if (totalScore >= 10000) rating = "🥉 Dobra rozgrywka, ale limity kilometrów lub lat odcięły Ci trochę punktów.";
+            else rating = "👨‍🎓 Te kryteria są bezwzględne! Warto spróbować jeszcze raz i precyzyjniej celować.";
 
             document.getElementById('main-box').innerHTML = `
                 <div class="end-screen" style="margin: 0 auto;">
