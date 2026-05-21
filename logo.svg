@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Definicje gradientów i cieni -->
+  <defs>
+    <!-- Tło: Głęboki, elegancki granat do fioletu -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a252f" />
+      <stop offset="100%" stop-color="#2c3e50" />
+    </linearGradient>
+    
+    <!-- Złoty gradient dla aureoli i detali -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe259" />
+      <stop offset="100%" stop-color="#ffa751" />
+    </linearGradient>
+
+    <!-- Czerwony gradient dla pinezki (nawiązanie do Geoguessr) -->
+    <linearGradient id="pinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff416c" />
+      <stop offset="100%" stop-color="#ff4b2b" />
+    </linearGradient>
+
+    <!-- Delikatny cień pod elementami -->
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Kwadratowa baza logo z lekko zaokrąglonymi rogami -->
+  <rect width="512" height="512" rx="96" fill="url(#bgGrad)" />
+
+  <!-- Warstwa dekoracyjna: Siatka geograficzna/kompas w tle -->
+  <g stroke="#ffffff" stroke-opacity="0.08" stroke-width="2" fill="none">
+    <circle cx="256" cy="256" r="180" />
+    <circle cx="256" cy="256" r="120" />
+    <line x1="256" y1="40" x2="256" y2="472" />
+    <line x1="40" y1="256" x2="472" y2="256" />
+    <!-- Linie skośne -->
+    <line x1="103" y1="103" x2="409" y2="409" />
+    <line x1="103" y1="409" x2="409" y2="103" />
+  </g>
+
+  <!-- Główny element: Świetlista Aureola (Saint) -->
+  <circle cx="256" cy="210" r="85" fill="none" stroke="url(#goldGrad)" stroke-width="24" filter="url(#dropShadow)" />
+  
+  <!-- Promienie bijące z aureoli -->
+  <g stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" opacity="0.8">
+    <line x1="256" y1="105" x2="256" y2="85" />
+    <line x1="256" y1="315" x2="256" y2="295" />
+    <line x1="151" y1="210" x2="131" y2="210" />
+    <line x1="361" y1="210" x2="341" y2="210" />
+    <line x1="182" y1="136" x2="168" y2="122" />
+    <line x1="330" y1="284" x2="344" y2="298" />
+    <line x1="182" y1="284" x2="168" y2="298" />
+    <line x1="330" y1="136" x2="344" y2="122" />
+  </g>
+
+  <!-- Drugi główny element: Pinezka Mapy (Guessr) wkomponowana w aureolę -->
+  <g filter="url(#dropShadow)">
+    <!-- Kształt pinezki -->
+    <path d="M256,150 C211,150 175,186 175,231 C175,291 256,390 256,390 C256,390 337,291 337,231 C337,186 301,150 256,150 Z" fill="url(#pinGrad)" />
+    <!-- Środek pinezki (wcięcie / krzyż w negatywie) -->
+    <path d="M246,200 H266 V220 H286 V240 H266 V280 H246 V240 H226 V220 H246 Z" fill="#ffffff" />
+  </g>
+
+  <!-- Podświetlenie u dołu pinezki dla efektu 3D -->
+  <ellipse cx="256" cy="405" rx="35" ry="8" fill="#000000" opacity="0.3" />
+</svg>
