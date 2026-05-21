@@ -58,17 +58,18 @@
             align-items: center;
             justify-content: center;
             background: #fafafa;
-            border: 2px dashed #ccc;
+            border: 2px solid #eef1f6;
             border-radius: 8px;
             padding: 10px;
-            min-height: 400px;
+            min-height: 420px;
+            text-align: center;
         }
         .saint-image {
             max-width: 100%;
-            max-height: 400px;
+            max-height: 380px;
             border-radius: 6px;
-            object-fit: contain;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            object-fit: contain;
         }
         .map-section {
             display: flex;
@@ -122,20 +123,18 @@
 <body>
 
     <h1>Saintguessr</h1>
-    <p class="subtitle">Rozpoznaj postać, wskaż miejsce urodzenia na mapie i ustaw rok na osi czasu!</p>
+    <p class="subtitle">Rozpoznaj postać, wskaż miejsce i czas urodzenia!</p>
 
-    <!-- Paski informacji o aktualnej rozgrywce -->
     <div id="info-bar" class="status-bar">
         <div id="round-counter">Runda: 1 / 5</div>
         <div id="score-counter">Suma punktów: 0</div>
     </div>
 
-    <!-- Główny kontener gry -->
     <div id="main-box" class="game-container">
         <!-- Sekcja z Obrazem -->
         <div class="image-section">
             <h3 style="margin-top: 0; color: #34495e;">Kim jest ta postać?</h3>
-            <img id="saint-pic" class="saint-image" src="" alt="Ładowanie obrazu świętego...">
+            <img id="saint-pic" class="saint-image" src="" alt="Obraz Świętego">
         </div>
 
         <!-- Sekcja z Mapą -->
@@ -147,87 +146,53 @@
         <!-- Sekcja z Osią Czasu -->
         <div class="timeline-section">
             <h3 style="margin-top: 0; color: #34495e;">Wybierz rok urodzenia (Oś czasu):</h3>
-            <input type="range" min="-50" max="2000" value="1000" class="slider" id="year-slider" oninput="updateYearLabel(this.value)">
+            <input type="range" min="-50" max="2010" value="1000" class="slider" id="year-slider" oninput="updateYearLabel(this.value)">
             <div style="font-size: 26px; font-weight: bold; color: #2c3e50;" id="year-label">1000 n.e.</div>
         </div>
 
-        <!-- Przycisk weryfikacji -->
         <button id="action-btn" class="btn" onclick="checkAnswer()">Sprawdź odpowiedź!</button>
-        
-        <!-- Miejsce na wyniki rundy -->
         <div id="result-box" class="result"></div>
     </div>
 
-    <!-- Skrypty obsługi mapy i logiki gry -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Pełna baza danych z bezpiecznymi bezpośrednimi linkami do grafik z domeny publicznej
+        // Baza danych ze ścieżkami względnymi
         const allSaints = [
-            { "name": "Święty Piotr (Apostoł)", "birth_year": -1, "lat": 32.8872, "lng": 35.6264, "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Cima_da_Conegliano%2C_Saint_Peter.jpg" },
-            { "name": "Święty Paweł z Tarsu", "birth_year": 5, "lat": 36.9164, "lng": 34.8951, "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Enrique_Simonet_-_San_Pablo_1887.jpg" },
-            { "name": "Święty Jan Ewangelista", "birth_year": 15, "lat": 32.8872, "lng": 35.6264, "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/de/El_Greco_-_St_John_the_Evangelist_-_WGA10521.jpg" },
-            { "name": "Święty Jakub Starszy", "birth_year": 5, "lat": 32.7940, "lng": 35.5312, "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/41/Rembrandt_-_Saint_James_the_Greater_-_WGA19225.jpg" },
-            { "name": "Święty Dominik Guzmán", "birth_year": 1170, "lat": 41.8252, "lng": -3.4889, "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/07/Claudio_Coello_-_Saint_Dominic_of_Guzm%C3%A1n_-_WGA05139.jpg" },
-            { "name": "Święty Ojciec Pio", "birth_year": 1887, "lat": 41.1983, "lng": 14.8431, "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Padre_Pio_da_Pietrelcina.jpg" },
-            { "name": "Święty Jan Paweł II", "birth_year": 1920, "lat": 49.8833, "lng": 19.4933, "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/60/John_Paul_II_portrait.jpg" },
-            { "name": "Święta Faustyna Kowalska", "birth_year": 1905, "lat": 52.2415, "lng": 18.9322, "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Faustina_Kowalska_in_1923.jpg" }
+            { "name": "Święta Małgorzata Maria Alacoque", "birth_year": 1647, "lat": 46.4356, "lng": 4.4172, "img_url": "zdjecia/St_Margaret_Mary_Alacoque_Contemplating_the_Sacred_Heart_of_Jesus.png" },
+            { "name": "Święty Dominik Guzmán", "birth_year": 1170, "lat": 41.8252, "lng": -3.4889, "img_url": "zdjecia/Santo_Domingo_de_Guzmán,_Museo_de_Bellas_Artes_de_Córdoba.jpg" },
+            { "name": "Święty Carlo Acutis", "birth_year": 1991, "lat": 51.5074, "lng": -0.1278, "img_url": "zdjecia/carlo.jpg" },
+            { "name": "Święty Piotr (Apostoł)", "birth_year": -1, "lat": 32.8872, "lng": 35.6264, "img_url": "zdjecia/św. piotr.jpg" },
+            { "name": "Święty Jan Paweł II", "birth_year": 1920, "lat": 49.8833, "lng": 19.4933, "img_url": "zdjecia/Jan_Paweł_II_mal._Zbigniew_Kotyłło.jpg" },
+            { "name": "Święty Franciszek z Asyżu", "birth_year": 1181, "lat": 43.0707, "lng": 12.6131, "img_url": "zdjecia/Cigoli,_san_francesco.jpg" },
+            { "name": "Święty Paweł z Tarsu", "birth_year": 5, "lat": 36.9164, "lng": 34.8951, "img_url": "zdjecia/Giovanni_Francesco_Barbieri_-_Saint_Paul.jpg" },
+            { "name": "Święta Faustyna Kowalska", "birth_year": 1905, "lat": 52.2415, "lng": 18.9322, "img_url": "zdjecia/Maria_Faustyna_Kowalska.jpg" },
+            { "name": "Święty Jan Ewangelista", "birth_year": 15, "lat": 32.8872, "lng": 35.6264, "img_url": "zdjecia/Szymon_Czechowicz_-_St_John_the_Evangelist_1754.jpg" },
+            { "name": "Święty Jan Chrzciciel", "birth_year": -6, "lat": 31.7683, "lng": 35.1642, "img_url": "zdjecia/jan chrzciciel.jpg" }
         ];
 
-        let gameSaints = []; // Tablica na 5 świętych wylosowanych do tej rozgrywki
-        let currentRound = 0; // Od 0 do 4
+        let gameSaints = [];
+        let currentRound = 0;
         let map, userMarker, correctCircle;
         let selectedLat = null, selectedLng = null;
         let totalScore = 0;
 
-        // Tasowanie bazy i wybór 5 losowych postaci na tę partię
         function startNewGame() {
             totalScore = 0;
             currentRound = 0;
-            // Losowe przemieszanie tablicy
             const shuffled = [...allSaints].sort(() => 0.5 - Math.random());
-            // Wybór 5 pierwszych pozycji
-            gameSaints = shuffled.slice(0, 5);
-            
-            // Przywrócenie pierwotnego układu HTML jeśli gracz gra ponownie
-            document.body.innerHTML = `
-                <h1>Saintguessr</h1>
-                <p class="subtitle">Rozpoznaj postać, wskaż miejsce urodzenia na mapie i ustaw rok na osi czasu!</p>
-                <div id="info-bar" class="status-bar">
-                    <div id="round-counter">Runda: 1 / 5</div>
-                    <div id="score-counter">Suma punktów: 0</div>
-                </div>
-                <div id="main-box" class="game-container">
-                    <div class="image-section">
-                        <h3 style="margin-top: 0; color: #34495e;">Kim jest ta postać?</h3>
-                        <img id="saint-pic" class="saint-image" src="" alt="Ładowanie obrazu...">
-                    </div>
-                    <div class="map-section">
-                        <h3 style="margin-top: 0; color: #34495e;">Zaznacz miejsce urodzenia:</h3>
-                        <div id="map"></div>
-                    </div>
-                    <div class="timeline-section">
-                        <h3 style="margin-top: 0; color: #34495e;">Wybierz rok urodzenia (Oś czasu):</h3>
-                        <input type="range" min="-50" max="2000" value="1000" class="slider" id="year-slider" oninput="updateYearLabel(this.value)">
-                        <div style="font-size: 26px; font-weight: bold; color: #2c3e50;" id="year-label">1000 n.e.</div>
-                    </div>
-                    <button id="action-btn" class="btn" onclick="checkAnswer()">Sprawdź odpowiedź!</button>
-                    <div id="result-box" class="result"></div>
-                </div>
-            `;
-            
-            map = null;
-            userMarker = null;
-            correctCircle = null;
+            gameSaints = shuffled.slice(0, 5); 
             initRound();
         }
 
-        // Ładowanie kolejnej rundy
         function initRound() {
             const saint = gameSaints[currentRound];
             
             document.getElementById('round-counter').innerText = `Runda: ${currentRound + 1} / 5`;
             document.getElementById('score-counter').innerText = `Suma punktów: ${totalScore}`;
-            document.getElementById('saint-pic').src = saint.image_url;
+            
+            const pic = document.getElementById('saint-pic');
+            pic.src = saint.img_url;
+            
             document.getElementById('result-box').innerHTML = "";
             document.getElementById('year-slider').value = 1000;
             updateYearLabel(1000);
@@ -235,7 +200,7 @@
             document.getElementById('action-btn').style.display = "block";
             
             if (!map) {
-                map = L.map('map').setView([40, 20], 3);
+                map = L.map('map').setView([45, 15], 3);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; OpenStreetMap'
                 }).addTo(map);
@@ -253,7 +218,7 @@
                 if (correctCircle) { map.removeLayer(correctCircle); correctCircle = null; }
                 selectedLat = null;
                 selectedLng = null;
-                map.setView([40, 20], 3);
+                map.setView([45, 15], 3);
             }
         }
 
@@ -272,10 +237,9 @@
             return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
         }
 
-        // Sprawdzanie i kalkulacja punktów na krzywej wykładniczej
         function checkAnswer() {
             if (selectedLat === null) {
-                alert("Proszę najpierw kliknąć na mapie miejsce urodzenia!");
+                alert("Proszę najpierw wskazać miejsce urodzenia na mapie kliknięciem!");
                 return;
             }
 
@@ -285,43 +249,39 @@
             const distanceDiff = getDistance(selectedLat, selectedLng, saint.lat, saint.lng);
             const yearDiff = Math.abs(userYear - saint.birth_year);
 
-            // Wykładniczy system naliczania punktów
-            let mapScore = 2500 * Math.exp(-distanceDiff / 180);
-            if (distanceDiff <= 1) mapScore = 2500;
-            if (distanceDiff > 20000) mapScore = 0;
+            // NOWA PUNKTACJA: Max 5000 punktów za mapę i max 5000 punktów za czas
+            let mapScore = 5000 - (distanceDiff * 0.5); 
+            if (mapScore < 0) mapScore = 0;
 
-            let timeScore = 2500 * Math.exp(-yearDiff / 180);
-            if (yearDiff === 0) timeScore = 2500;
-            if (yearDiff > 1000) timeScore = 0;
+            let timeScore = 5000 - (yearDiff * 5.0); 
+            if (timeScore < 0) timeScore = 0;
 
             let roundScore = Math.round(mapScore + timeScore);
-            if (roundScore === 0 && distanceDiff <= 20000 && yearDiff <= 1000) {
-                roundScore = 1;
-            }
             
             totalScore += roundScore;
             document.getElementById('score-counter').innerText = `Suma punktów: ${totalScore}`;
             document.getElementById('action-btn').style.display = "none";
 
-            // Wybór przycisku w zależności od tego czy to ostatnia runda czy nie
             let nextButtonHTML = '';
             if (currentRound < 4) {
-                nextButtonHTML = `<button class="btn" style="width:100%;" onclick="advanceRound()">Następna runda &raquo;</button>`;
+                nextButtonHTML = `<button class="btn" style="width:100%; margin-top:10px;" onclick="advanceRound()">Następna runda &raquo;</button>`;
             } else {
-                nextButtonHTML = `<button class="btn" style="width:100%; background-color: #e67e22;" onclick="showEndScreen()">Zobacz podsumowanie gry &raquo;</button>`;
+                nextButtonHTML = `<button class="btn" style="width:100%; margin-top:10px; background-color: #e67e22;" onclick="showEndScreen()">Zobacz podsumowanie gry &raquo;</button>`;
             }
+
+            let birthYearFormatted = saint.birth_year < 0 ? Math.abs(saint.birth_year) + " p.n.e." : saint.birth_year + " n.e.";
 
             document.getElementById('result-box').innerHTML = `
                 <div style="background: #2c3e50; color: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
                     <h2 style="margin: 0 0 10px 0; color: #f1c40f;">To: ${saint.name}</h2>
-                    <p>📍 Pomyłka geograficzna: <strong>${distanceDiff} km</strong></p>
-                    <p>⏳ Pomyłka chronologiczna: <strong>${yearDiff} lat</strong></p>
+                    <p>Urodzony/a w roku: <strong>${birthYearFormatted}</strong></p>
+                    <p>📍 Pomyłka geograficzna: <strong>${distanceDiff} km</strong> (Punkty: ${Math.round(mapScore)}/5000)</p>
+                    <p>⏳ Pomyłka chronologiczna: <strong>${yearDiff} lat</strong> (Punkty: ${Math.round(timeScore)}/5000)</p>
                     <hr style="border-color: rgba(255,255,255,0.2);">
                     <p style="font-size: 20px; margin: 5px 0 0 0;">
-                        Punkty w tej rundzie: <strong style="color: #2ecc71;">+${roundScore}</strong> / 5000
+                        Punkty w tej rundzie: <strong style="color: #2ecc71;">+${roundScore}</strong> / 10000
                     </p>
                 </div>
-                <br>
                 ${nextButtonHTML}
             `;
 
@@ -337,32 +297,27 @@
             initRound();
         }
 
-        // Wyświetlenie ekranu końcowego po 5 rundach
         function showEndScreen() {
-            let maxPossible = 25000;
             let rating = "";
-            
-            if (totalScore >= 22000) rating = "🥇 Jesteś genialnym hagiografem i historykiem!";
-            else if (totalScore >= 15000) rating = "🥈 Świetny wynik! Masz ogromną wiedzę.";
-            else if (totalScore >= 7000) rating = "🥉 Dobra rozgrywka, ale niektóre stulecia lub kraje Ci się pomieszały.";
+            // Skala ocen dostosowana do nowego max limitu (50 000 pkt)
+            if (totalScore >= 40000) rating = "🥇 Jesteś genialnym hagiografem i historykiem!";
+            else if (totalScore >= 28000) rating = "🥈 Świetny wynik! Masz ogromną wiedzę.";
+            else if (totalScore >= 14000) rating = "🥉 Dobra rozgrywka, ale niektóre stulecia lub kraje Ci się pomieszały.";
             else rating = "👨‍🎓 Warto jeszcze poćwiczyć, świat i historia skrywają przed Tobą tajemnice.";
 
-            document.body.innerHTML = `
-                <h1>Saintguessr</h1>
-                <p class="subtitle">Rozgrywka zakończona!</p>
+            document.getElementById('main-box').innerHTML = `
                 <div class="end-screen">
                     <h2 style="color: #2c3e50; margin-top:0;">Koniec gry!</h2>
                     <p style="font-size: 24px; margin: 20px 0;">Twój ostateczny wynik to:</p>
                     <div style="font-size: 48px; font-weight: bold; color: #e67e22; margin-bottom: 20px;">
-                        ${totalScore} <span style="font-size:20px; color:#7f8c8d;">/ ${maxPossible} pkt</span>
+                        ${totalScore} <span style="font-size:20px; color:#7f8c8d;">/ 50000 pkt</span>
                     </div>
                     <p style="font-size: 18px; color: #34495e; font-style: italic; margin-bottom: 30px;">${rating}</p>
-                    <button class="btn" style="width: 100%;" onclick="startNewGame()">Zagraj jeszcze raz</button>
+                    <button class="btn" style="width: 100%;" onclick="location.reload()">Zagraj od nowa</button>
                 </div>
             `;
         }
 
-        // Start gry po włączeniu strony
         window.onload = startNewGame;
     </script>
 </body>
