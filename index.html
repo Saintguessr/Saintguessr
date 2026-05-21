@@ -4,118 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saintguessr</title>
-    <!-- Ładowanie ikony gry (logo) -->
-    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <!-- Ładowanie ikony gry (logo w zakładce) -->
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
     <!-- Ładowanie darmowych map Leaflet (Styl i skrypty) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            /* Złote tło nawiązujące do aureoli */
+            background: linear-gradient(135deg, #ffa751 0%, #ffe259 100%);
+            min-height: 100vh;
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+        
+        /* Styl dla ikony nad napisem głównym */
+        .game-logo-top {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+            border: 3px solid #ffffff;
+        }
+
         h1 {
-            color: #2c3e50;
-            margin-bottom: 5px;
-            font-size: 32px;
+            /* Czerwony kolor pinezki z grubą białą obwolutą */
+            color: #ff416c;
+            text-shadow: 
+                -2px -2px 0 #fff,  
+                 2px -2px 0 #fff,
+                -2px  2px 0 #fff,
+                 2px  2px 0 #fff,
+                 0px  4px 10px rgba(0,0,0,0.2);
+            margin: 0 0 5px 0;
+            font-size: 42px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-weight: 900;
+            text-align: center;
         }
+
         .subtitle {
-            color: #7f8c8d;
+            color: #2c3e50;
+            font-weight: bold;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+            text-align: center;
         }
+
         .status-bar {
             width: 100%;
             max-width: 1000px;
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             font-weight: bold;
-            color: #34495e;
-            font-size: 18px;
+            color: #1a252f;
+            font-size: 20px;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.5);
         }
+
         .game-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 25px;
             max-width: 1000px;
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 25px;
+            box-sizing: border-box;
         }
+
         @media (max-width: 768px) {
             .game-container { grid-template-columns: 1fr; }
         }
-        .image-section {
+
+        .image-section, .map-section {
             display: flex;
             flex-direction: column;
+        }
+
+        /* Czerwone nagłówki sekcji z białą obwolutą */
+        .section-title {
+            color: #ff4b2b;
+            text-shadow: 
+                -1px -1px 0 #fff,  
+                 1px -1px 0 #fff,
+                -1px  2px 0 #fff,
+                 1px  2px 0 #fff;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .image-box {
+            display: flex;
             align-items: center;
             justify-content: center;
-            background: #fafafa;
-            border: 2px solid #eef1f6;
-            border-radius: 8px;
+            background: #1a252f; /* Ciemne tło z logo, żeby obrazki ładnie kontrastowały */
+            border: 3px solid #ff416c;
+            border-radius: 12px;
             padding: 10px;
-            min-height: 420px;
+            height: 380px;
             text-align: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
         }
+
         .saint-image {
             max-width: 100%;
-            max-height: 380px;
+            max-height: 100%;
             border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             object-fit: contain;
         }
-        .map-section {
-            display: flex;
-            flex-direction: column;
-        }
+
         #map {
-            height: 350px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            height: 380px;
+            border-radius: 12px;
+            border: 3px solid #ff416c;
             z-index: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+
         .timeline-section {
             grid-column: 1 / -1;
-            background: #eef1f6;
-            padding: 15px;
-            border-radius: 8px;
+            background: #1a252f;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
+
         .slider {
             width: 90%;
             margin: 15px 0;
             cursor: pointer;
+            accent-color: #ff416c; /* Czerwony suwak w nowoczesnych przeglądarkach */
         }
+
         .btn {
             grid-column: 1 / -1;
-            background-color: #2c3e50;
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
             color: white;
-            border: none;
-            padding: 15px;
-            font-size: 18px;
-            border-radius: 6px;
+            border: 2px solid #ffffff;
+            padding: 18px;
+            font-size: 20px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s ease;
             font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
         }
-        .btn:hover { background-color: #34495e; }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(255, 65, 108, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+
         .result {
             grid-column: 1 / -1;
         }
+
         .end-screen {
             background: white;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             text-align: center;
             max-width: 500px;
             width: 100%;
@@ -123,6 +191,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Link do ikony z Twojego GitHuba umieszczony nad napisem głównym -->
+    <img class="game-logo-top" src="https://raw.githubusercontent.com/Saintguessr/Saintguessr/b6f4a836981e2285c78eb04cb34a8b1f48f7b83a/logo.jpg" alt="Saintguessr Logo">
 
     <h1>Saintguessr</h1>
     <p class="subtitle">Rozpoznaj postać, wskaż miejsce i czas urodzenia!</p>
@@ -135,21 +206,23 @@
     <div id="main-box" class="game-container">
         <!-- Sekcja z Obrazem -->
         <div class="image-section">
-            <h3 style="margin-top: 0; color: #34495e;">Kim jest ta postać?</h3>
-            <img id="saint-pic" class="saint-image" src="" alt="Obraz Świętego">
+            <div class="section-title">Kim jest ta postać?</div>
+            <div class="image-box">
+                <img id="saint-pic" class="saint-image" src="" alt="Obraz Świętego">
+            </div>
         </div>
 
         <!-- Sekcja z Mapą -->
         <div class="map-section">
-            <h3 style="margin-top: 0; color: #34495e;">Zaznacz miejsce urodzenia:</h3>
+            <div class="section-title">Zaznacz miejsce urodzenia:</div>
             <div id="map"></div>
         </div>
 
         <!-- Sekcja z Osią Czasu -->
         <div class="timeline-section">
-            <h3 style="margin-top: 0; color: #34495e;">Wybierz rok urodzenia (Oś czasu):</h3>
+            <div class="section-title" style="color: #ffe259; text-shadow: none;">Wybierz rok urodzenia (Oś czasu):</div>
             <input type="range" min="-50" max="2010" value="1000" class="slider" id="year-slider" oninput="updateYearLabel(this.value)">
-            <div style="font-size: 26px; font-weight: bold; color: #2c3e50;" id="year-label">1000 n.e.</div>
+            <div style="font-size: 28px; font-weight: bold; color: #ffe259;" id="year-label">1000 n.e.</div>
         </div>
 
         <button id="action-btn" class="btn" onclick="checkAnswer()">Sprawdź odpowiedź!</button>
@@ -158,9 +231,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Rozbudowana baza danych o przesłane postaci (łącznie 33 pozycje)
         const allSaints = [
-            // Poprzednie 10 postaci
             { "name": "Święta Małgorzata Maria Alacoque", "birth_year": 1647, "lat": 46.4356, "lng": 4.4172, "img_url": "zdjecia/St_Margaret_Mary_Alacoque_Contemplating_the_Sacred_Heart_of_Jesus.png" },
             { "name": "Święty Dominik Guzmán", "birth_year": 1170, "lat": 41.8252, "lng": -3.4889, "img_url": "zdjecia/Santo_Domingo_de_Guzmán,_Museo_de_Bellas_Artes_de_Córdoba.jpg" },
             { "name": "Święty Carlo Acutis", "birth_year": 1991, "lat": 51.5074, "lng": -0.1278, "img_url": "zdjecia/carlo.jpg" },
@@ -171,30 +242,28 @@
             { "name": "Święta Faustyna Kowalska", "birth_year": 1905, "lat": 52.2415, "lng": 18.9322, "img_url": "zdjecia/Maria_Faustyna_Kowalska.jpg" },
             { "name": "Święty Jan Ewangelista", "birth_year": 15, "lat": 32.8872, "lng": 35.6264, "img_url": "zdjecia/Szymon_Czechowicz_-_St_John_the_Evangelist_1754.jpg" },
             { "name": "Święty Jan Chrzciciel", "birth_year": -6, "lat": 31.7683, "lng": 35.1642, "img_url": "zdjecia/jan chrzciciel.jpg" },
-            
-            // NOWE POSTACIE (z folderu zdjecia 2)
-            { "name": "Święty Andrzej Bobola", "birth_year": 1591, "lat": 49.5911, "lng": 22.0461, "img_url": "zdjecia 2/Bobola.jpg" }, // Strachocina
-            { "name": "Święty Maksymilian Maria Kolbe", "birth_year": 1894, "lat": 51.6597, "lng": 19.3497, "img_url": "zdjecia 2/Fr.Maximilian_Kolbe_in_1936.jpg" }, // Zduńska Wola
-            { "name": "Święty Cyryl Aleksandryjski", "birth_year": 376, "lat": 30.9833, "lng": 31.1167, "img_url": "zdjecia 2/Icon_St._Cyril_of_Alexandria.jpg" }, // El-Mahalla el-Kubra, Egipt
-            { "name": "Święty Juan Diego", "birth_year": 1474, "lat": 19.6002, "lng": -99.1917, "img_url": "zdjecia 2/MIguel_Cabrera_-_Fiel_retrato_do_vener%C3%A1vel_Juan_Diego.jpg" }, // Cuautitlán, Meksyk
-            { "name": "Święta Matka Teresa z Kalkuty", "birth_year": 1910, "lat": 41.9964, "lng": 21.4306, "img_url": "zdjecia 2/MOTHER_TERESA_-_OIL_PAINTING_BY_RAJASEKHARAN.jpg" }, // Skopje, Macedonia
-            { "name": "Błogosławiony Jerzy Popiełuszko", "birth_year": 1947, "lat": 53.4869, "lng": 23.2750, "img_url": "zdjecia 2/Obraz_beatyfikacyjny_Jerzy_Popie%C5%82uszko_Malowa%C5%82_Zbigniew_Koty%C5%82%C5%82o.jpg" }, // Okopy
-            { "name": "Święty Ojciec Pio z Pietrelciny", "birth_year": 1887, "lat": 41.1856, "lng": 14.8472, "img_url": "zdjecia 2/Padre_Pio_portrait.jpg" }, // Pietrelcina, Włochy
-            { "name": "Błogosławiona Elżbieta Róża Czacka", "birth_year": 1876, "lat": 49.7989, "lng": 28.6125, "img_url": "zdjecia 2/R%C3%B3%C5%BCa_Czacka_1918.jpg" }, // Biała Cerkiew, Ukraina
-            { "name": "Święty Antoni Padewski", "birth_year": 1195, "lat": 38.7223, "lng": -9.1393, "img_url": "zdjecia 2/Saint_Anthony_of_Padua_with_the_Infant_Christ.jpg" }, // Lizbona, Portugalia
-            { "name": "Święty Ignacy Loyola", "birth_year": 1491, "lat": 43.1746, "lng": -2.2831, "img_url": "zdjecia 2/Saint_Ignatius_of_Loyola._Engraving._Wellcome_V0032199.jpg" }, // Loyola, Hiszpania
-            { "name": "Święty Patryk", "birth_year": 385, "lat": 54.3410, "lng": -4.5320, "img_url": "zdjecia 2/Saint_Patrick_Catholic_Church_(Junction_City%2C_Ohio)_-_stained_glass%2C_Saint_Patrick_-_detail.jpg" }, // Brytania (szacunkowo)
-            { "name": "Święty Jan Bosko", "birth_year": 1815, "lat": 45.0117, "lng": 7.9867, "img_url": "zdjecia 2/San_Giovanni_Bosco.jpg" }, // Castelnuovo Don Bosco, Włochy
-            { "name": "Święta Cecylia", "birth_year": 200, "lat": 41.9028, "lng": 12.4964, "img_url": "zdjecia 2/Stanis%C5%82aw_Kaczor-Batowski_-_%C5%9Aw._Cecylia.jpg" }, // Rzym, Włochy
-            { "name": "Błogosławiony Stefan Wyszyński", "birth_year": 1901, "lat": 52.8592, "lng": 21.8964, "img_url": "zdjecia 2/Stefan_Wyszy%C5%84ski.jpg" }, // Zuzela
-            { "name": "Święta Jadwiga Andegaweńska (Królowa)", "birth_year": 1373, "lat": 47.4979, "lng": 19.0402, "img_url": "zdjecia 2/Swieta_Jadwiga_w_Sandomierzu.JPG" }, // Buda (Budapeszt), Węgry
-            { "name": "Święty Augustyn z Hippony", "birth_year": 354, "lat": 36.2161, "lng": 7.9511, "img_url": "zdjecia 2/Szymon_Czechowicz_(z_warsztatem)_-_%C5%9Aw._Augustyn.jpg" }, // Thagaste, dzis Algieria
-            { "name": "Święta Teresa z Lisieux", "birth_year": 1873, "lat": 48.4322, "lng": 0.0913, "img_url": "zdjecia 2/Teresa-de-Lisieux.jpg" }, // Alençon, Francja
-            { "name": "Święty Tomasz z Akwinu", "birth_year": 1225, "lat": 41.4936, "lng": 13.7025, "img_url": "zdjecia 2/Thomas_Aquinas_by_Carlo_Crivelli.png" }, // Roccasecca, Włochy
-            { "name": "Święty Benedykt z Nursji", "birth_year": 480, "lat": 42.7931, "lng": 13.0933, "img_url": "zdjecia 2/benedict%20z%20nursji.jpg" }, // Nursja, Włochy
-            { "name": "Święty Sebastian", "birth_year": 256, "lat": 43.7102, "lng": 7.2620, "img_url": "zdjecia 2/sebastian.jpg" }, // Narbona, Francja
-            { "name": "Święty Jan Maria Vianney", "birth_year": 1786, "lat": 45.8569, "lng": 4.8314, "img_url": "zdjecia 2/vianney.jpg" }, // Dardilly, Francja
-            { "name": "Święta Teresa z Ávila", "birth_year": 1515, "lat": 40.6565, "lng": -4.7001, "img_url": "zdjecia 2/%C5%9Bw%20Teresa%20z%20Avila.jpg" } // Ávila, Hiszpania
+            { "name": "Święty Andrzej Bobola", "birth_year": 1591, "lat": 49.5911, "lng": 22.0461, "img_url": "zdjecia 2/Bobola.jpg" },
+            { "name": "Święty Maksymilian Maria Kolbe", "birth_year": 1894, "lat": 51.6597, "lng": 19.3497, "img_url": "zdjecia 2/Fr.Maximilian_Kolbe_in_1936.jpg" },
+            { "name": "Święty Cyryl Aleksandryjski", "birth_year": 376, "lat": 30.9833, "lng": 31.1167, "img_url": "zdjecia 2/Icon_St._Cyril_of_Alexandria.jpg" },
+            { "name": "Święty Juan Diego", "birth_year": 1474, "lat": 19.6002, "lng": -99.1917, "img_url": "zdjecia 2/MIguel_Cabrera_-_Fiel_retrato_do_vener%C3%A1vel_Juan_Diego.jpg" },
+            { "name": "Święta Matka Teresa z Kalkuty", "birth_year": 1910, "lat": 41.9964, "lng": 21.4306, "img_url": "zdjecia 2/MOTHER_TERESA_-_OIL_PAINTING_BY_RAJASEKHARAN.jpg" },
+            { "name": "Błogosławiony Jerzy Popiełuszko", "birth_year": 1947, "lat": 53.4869, "lng": 23.2750, "img_url": "zdjecia 2/Obraz_beatyfikacyjny_Jerzy_Popie%C5%82uszko_Malowa%C5%82_Zbigniew_Koty%C5%82%C5%82o.jpg" },
+            { "name": "Święty Ojciec Pio z Pietrelciny", "birth_year": 1887, "lat": 41.1856, "lng": 14.8472, "img_url": "zdjecia 2/Padre_Pio_portrait.jpg" },
+            { "name": "Błogosławiona Elżbieta Róża Czacka", "birth_year": 1876, "lat": 49.7989, "lng": 28.6125, "img_url": "zdjecia 2/R%C3%B3%C5%BCa_Czacka_1918.jpg" },
+            { "name": "Święty Antoni Padewski", "birth_year": 1195, "lat": 38.7223, "lng": -9.1393, "img_url": "zdjecia 2/Saint_Anthony_of_Padua_with_the_Infant_Christ.jpg" },
+            { "name": "Święty Ignacy Loyola", "birth_year": 1491, "lat": 43.1746, "lng": -2.2831, "img_url": "zdjecia 2/Saint_Ignatius_of_Loyola._Engraving._Wellcome_V0032199.jpg" },
+            { "name": "Święty Patryk", "birth_year": 385, "lat": 54.3410, "lng": -4.5320, "img_url": "zdjecia 2/Saint_Patrick_Catholic_Church_(Junction_City%2C_Ohio)_-_stained_glass%2C_Saint_Patrick_-_detail.jpg" },
+            { "name": "Święty Jan Bosko", "birth_year": 1815, "lat": 45.0117, "lng": 7.9867, "img_url": "zdjecia 2/San_Giovanni_Bosco.jpg" },
+            { "name": "Święta Cecylia", "birth_year": 200, "lat": 41.9028, "lng": 12.4964, "img_url": "zdjecia 2/Stanis%C5%82aw_Kaczor-Batowski_-_%C5%9Aw._Cecylia.jpg" },
+            { "name": "Błogosławiony Stefan Wyszyński", "birth_year": 1901, "lat": 52.8592, "lng": 21.8964, "img_url": "zdjecia 2/Stefan_Wyszy%C5%84ski.jpg" },
+            { "name": "Święta Jadwiga Andegaweńska (Królowa)", "birth_year": 1373, "lat": 47.4979, "lng": 19.0402, "img_url": "zdjecia 2/Swieta_Jadwiga_w_Sandomierzu.JPG" },
+            { "name": "Święty Augustyn z Hippony", "birth_year": 354, "lat": 36.2161, "lng": 7.9511, "img_url": "zdjecia 2/Szymon_Czechowicz_(z_warsztatem)_-_%C5%9Aw._Augustyn.jpg" },
+            { "name": "Święta Teresa z Lisieux", "birth_year": 1873, "lat": 48.4322, "lng": 0.0913, "img_url": "zdjecia 2/Teresa-de-Lisieux.jpg" },
+            { "name": "Święty Tomasz z Akwinu", "birth_year": 1225, "lat": 41.4936, "lng": 13.7025, "img_url": "zdjecia 2/Thomas_Aquinas_by_Carlo_Crivelli.png" },
+            { "name": "Święty Benedykt z Nursji", "birth_year": 480, "lat": 42.7931, "lng": 13.0933, "img_url": "zdjecia 2/benedict%20z%20nursji.jpg" },
+            { "name": "Święty Sebastian", "birth_year": 256, "lat": 43.7102, "lng": 7.2620, "img_url": "zdjecia 2/sebastian.jpg" },
+            { "name": "Święty Jan Maria Vianney", "birth_year": 1786, "lat": 45.8569, "lng": 4.8314, "img_url": "zdjecia 2/vianney.jpg" },
+            { "name": "Święta Teresa z Ávila", "birth_year": 1515, "lat": 40.6565, "lng": -4.7001, "img_url": "zdjecia 2/%C5%9Bw%20Teresa%20z%20Avila.jpg" }
         ];
 
         let gameSaints = [];
@@ -276,7 +345,6 @@
             const distanceDiff = getDistance(selectedLat, selectedLng, saint.lat, saint.lng);
             const yearDiff = Math.abs(userYear - saint.birth_year);
 
-            // Punkty: Max 5000 za mapę i max 5000 za czas
             let mapScore = 5000 - (distanceDiff * 0.5); 
             if (mapScore < 0) mapScore = 0;
 
@@ -293,14 +361,14 @@
             if (currentRound < 4) {
                 nextButtonHTML = `<button class="btn" style="width:100%; margin-top:10px;" onclick="advanceRound()">Następna runda &raquo;</button>`;
             } else {
-                nextButtonHTML = `<button class="btn" style="width:100%; margin-top:10px; background-color: #e67e22;" onclick="showEndScreen()">Zobacz podsumowanie gry &raquo;</button>`;
+                nextButtonHTML = `<button class="btn" style="width:100%; margin-top:10px; background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); box-shadow: 0 5px 15px rgba(230,126,34,0.4);" onclick="showEndScreen()">Zobacz podsumowanie gry &raquo;</button>`;
             }
 
             let birthYearFormatted = saint.birth_year < 0 ? Math.abs(saint.birth_year) + " p.n.e." : saint.birth_year + " n.e.";
 
             document.getElementById('result-box').innerHTML = `
-                <div style="background: #2c3e50; color: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                    <h2 style="margin: 0 0 10px 0; color: #f1c40f;">To: ${saint.name}</h2>
+                <div style="background: #1a252f; color: white; padding: 15px; border-radius: 12px; margin-top: 15px; border: 2px solid #ff416c;">
+                    <h2 style="margin: 0 0 10px 0; color: #ffe259;">To: ${saint.name}</h2>
                     <p>Urodzony/a w roku: <strong>${birthYearFormatted}</strong></p>
                     <p>📍 Pomyłka geograficzna: <strong>${distanceDiff} km</strong> (Punkty: ${Math.round(mapScore)}/5000)</p>
                     <p>⏳ Pomyłka chronologiczna: <strong>${yearDiff} lat</strong> (Punkty: ${Math.round(timeScore)}/5000)</p>
@@ -313,7 +381,7 @@
             `;
 
             correctCircle = L.circle([saint.lat, saint.lng], {
-                color: 'green', fillColor: '#2ecc71', fillOpacity: 0.5, radius: 150000
+                color: '#2ecc71', fillColor: '#2ecc71', fillOpacity: 0.5, radius: 150000
             }).addTo(map).bindPopup(`<b>${saint.name}</b><br>Miejsce urodzenia`).openPopup();
             
             map.setView([saint.lat, saint.lng], 4);
@@ -332,10 +400,10 @@
             else rating = "👨‍🎓 Warto jeszcze poćwiczyć, świat i historia skrywają przed Tobą tajemnice.";
 
             document.getElementById('main-box').innerHTML = `
-                <div class="end-screen">
-                    <h2 style="color: #2c3e50; margin-top:0;">Koniec gry!</h2>
-                    <p style="font-size: 24px; margin: 20px 0;">Twój ostateczny wynik to:</p>
-                    <div style="font-size: 48px; font-weight: bold; color: #e67e22; margin-bottom: 20px;">
+                <div class="end-screen" style="margin: 0 auto;">
+                    <h2 style="color: #ff416c; margin-top:0; font-size: 32px; text-transform: uppercase;">Koniec gry!</h2>
+                    <p style="font-size: 24px; margin: 20px 0; color: #2c3e50;">Twój ostateczny wynik to:</p>
+                    <div style="font-size: 54px; font-weight: bold; color: #ff4b2b; margin-bottom: 20px; text-shadow: 1px 1px 0 #fff;">
                         ${totalScore} <span style="font-size:20px; color:#7f8c8d;">/ 50000 pkt</span>
                     </div>
                     <p style="font-size: 18px; color: #34495e; font-style: italic; margin-bottom: 30px;">${rating}</p>
